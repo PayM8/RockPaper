@@ -1,0 +1,226 @@
+﻿
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+
+@using RockPaper.Web.Models
+@model List<GameResult>
+@{
+    ViewBag.Title = "Game Dashboard";
+}
+
+
+<div class="row">
+    <div class="col-xs-4">
+
+    </div>
+    <div class="col-xs-4">
+        Last update: <strong class="text-center">@DateTime.Now.ToLongTimeString()</strong>
+    </div>
+    <div class="col-xs-4">
+
+    </div>
+</div>
+
+@*@using (Html.BeginForm("filter", "Dashboard", FormMethod.Post, new { @class = "form-group form-control" }))
+    {
+
+
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#filter">Simple collapsible</button>
+        <div id="filter" class="collapse">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </div>
+
+        <div class="row panel panel-collapse">
+            <div class="col-xs-2">
+                Team Name
+            </div>
+            <div class="col-xs-10">
+                <input type="text" name="filterTeamName" class="form-control input-sm" />
+            </div>
+
+        </div>
+    }*@
+
+
+<div class="row">
+
+    @if (ViewBag.Data != null)
+    {
+
+        foreach (var gameResult in ViewBag.Data as List<GameResult>)
+        {
+
+            if (gameResult.Game.GameState != Contracts.Common.GameState.WaitingForPlayers)
+            {
+
+                <div class="col-xs-3 panel panel-primary dash">
+                    <div class="row panel-heading text-center">
+                        <strong>
+                            <label>
+                                @String.Concat(
+                                gameResult.Game.Team1.TeamName, "&",
+                                gameResult.Game.Team2.TeamName,". - ",
+                                "Game Status: ", @gameResult.Game.GameState.ToString(),
+                                ". - Start Time: ", @gameResult.Game.CreatedDate.ToShortTimeString())
+                            </label>
+                        </strong>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <table class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <td><strong>Team 1</strong></td>
+                                        <td><strong>Team 2</strong></td>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td><label>@gameResult.Game.Team1.TeamName</label> </td>
+                                    <td><label>@gameResult.Game.Team2.TeamName</label> </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <div class="row text-center">
+                                <strong>Number of rounds: </strong><label class="btn btn-warning">@gameResult.Rounds.Count</label>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <table class="table table-responsive table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td><strong>@string.Format("{0} Team Wins", gameResult.Game.Team1 == null ? "No Registered Team" : gameResult.Game.Team1.TeamName)</strong></td>
+                                        <td><strong>@string.Format("{0} Team Wins", gameResult.Game.Team2 == null ? "No Registered Team" : gameResult.Game.Team1.TeamName)</strong></td>
+                                        <td><strong>Game Draws</strong></td>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td><label class=" btn btn-primary">@gameResult.Team1WinsCount</label></td>
+                                    <td><label class="btn btn-success">@gameResult.Team2WinsCount</label></td>
+                                    <td><label class="btn btn-warning">@gameResult.DrawsCount</label></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row panel-heading text-center">
+                        <strong>Last Round</strong>
+                    </div>
+                    <div class="row">
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <td><strong>Team 1 Hand</strong></td>
+                                    <td><strong>Team 2 Hand</strong></td>
+                                </tr>
+                            </thead>
+                            <tr>
+
+                                @if (gameResult.LastRound != null)
+                                {
+                                    if (gameResult.LastRound.Team1Hand.HasValue)
+                                    {
+                                        switch (gameResult.LastRound.Team1Hand)
+                                        {
+                                            case Contracts.Common.Hand.Paper:
+                                                <td><img alt="Paper" src="~/Content/stock_images/papaer_black.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.Rock:
+                                            <td><img alt="Rock" src="~/Content/stock_images/rock_black.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.Scissor:
+                                            <td><img alt="Scissor" src="~/Content/stock_images/scissors_black.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.Spock:
+                                            <td><img alt="Spock" src="~/Content/stock_images/spork_hand.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.Lizard:
+                                            <td><img alt="Lizard" src="~/Content/stock_images/lizard_hand.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.None:
+                                            <td><img alt="None" src="~/Content/stock_images/blank_hand.png" /></td>
+                                                break;
+
+                                        }
+                                    }
+                                    if (gameResult.LastRound.Team2Hand.HasValue)
+                                    {
+                                        switch (gameResult.LastRound.Team2Hand)
+                                        {
+                                            case Contracts.Common.Hand.Paper:
+                                                <td><img alt="Paper" src="~/Content/stock_images/papaer_black.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.Rock:
+                                            <td><img alt="Rock" src="~/Content/stock_images/rock_black.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.Scissor:
+                                            <td><img alt="Scissor" src="~/Content/stock_images/scissors_black.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.Spock:
+                                            <td><img alt="Spock" src="~/Content/stock_images/spork_hand.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.Lizard:
+                                            <td><img alt="Lizard" src="~/Content/stock_images/lizard_hand.png" /></td>
+                                                break;
+                                            case Contracts.Common.Hand.None:
+                                            <td><img alt="None" src="~/Content/stock_images/blank_hand.png" /></td>
+                                                break;
+
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <td><img alt="None" src="~/Content/stock_images/blank_hand.png" /></td>
+                                    <td><img alt="None" src="~/Content/stock_images/blank_hand.png" /></td>
+                                }
+
+
+                            </tr>
+
+
+
+                        </table>
+                    </div>
+
+                </div>
+
+
+            }
+        }
+
+
+    }
+
+
+
+</div>
+
+
+@section scripts
+{
+
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        var time = new Date().getTime();
+        $(document.body).bind("mousemove keypress", function (e) {
+            time = new Date().getTime();
+        });
+
+        function refresh() {
+            if (new Date().getTime() - time >= 60000)
+                window.location.reload(true);
+            else
+                setTimeout(refresh, 10000);
+        }
+
+        setTimeout(refresh, 10000);
+    </script>
+}
